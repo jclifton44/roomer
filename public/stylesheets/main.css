@@ -1,0 +1,285 @@
+@font-face {
+	font-family: 'chunk5';
+	src: url(‘Chunkfive-webfont.eot’);
+	src: local('?'), url('../Chunkfive-webfont.woff') format('woff'), url('Chunkfive.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'olde';
+	src: url(‘../old_engl_webfont.eot’);
+	src: local('?'), url('../old_engl-webfont.woff') format('woff'), url('../old_engl-webfont.ttf') format('truetype');
+}
+
+
+
+
+* { margin:0; padding:0; } /* to remove the top and left whitespace */
+iframe, html, body {  
+	width:100%;
+	height:100%;
+			/*background-image:url('http://img.archiexpo.com/images_ae/photo-m/commercial-needle-punch-loop-pile-synthetic-carpets-gut-certified-low-voc-emissions-30-3720587.jpg');
+
+*/
+			} /* just to be sure these are full screen*/
+canvas {z-index:999;} /* To remove the scrollbars */
+div { position:absolute}
+.section{
+	
+		
+}
+#contentDivS1 {
+	top:0;
+}
+#contentDivS2 {
+	top:0;
+}
+.main_content{
+}
+#top {
+	font-family:chunk5; 
+	white-space:prewrap; 	
+	height:40px; 
+	line-height:70%; 
+	font-size:80pt; 
+	position:absolute;
+
+
+}
+#white-head {
+	z-index:0; 
+	display:none; 
+	width:100%; 
+	background-color:white;
+}
+#abt {
+}
+.rotate{
+	transform:rotate(180deg);
+-ms-transform:rotate(180deg); /* IE 9 */
+-webkit-transform:rotate(180deg); /* Safari and Chrome */
+}
+}
+
+.textElements{
+}
+.teWrapper{
+	overflow:scroll;
+	left:0;
+}
+.goodtext {
+	font-size:40px;
+	font-family:arial;
+}
+
+#main {
+	max-width:100%; 
+	max-height:100%;
+}	
+.main_q {
+	background-color:black;
+	border:10px solid;
+}
+
+#contentDiv1{
+	font-size:40px;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	
+	/*overflow:scroll;*/
+}
+
+#contentDiv2{
+	font-size:40px;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	margin-top:100px;
+	text-align:left;
+	overflow:scroll;
+}
+#title {
+	font-family:chunk5; 
+	height:40px; 
+	line-height:40px; 
+	z-index:1000; 
+	font-size:40pt; 
+	position:absolute;
+}
+#archiveText{
+	position:relative;
+	font-family:chunk5;
+	color:white;
+}
+.section {
+	/*background-image:url('http://img.archiexpo.com/images_ae/photo-m/commercial-needle-punch-loop-pile-synthetic-carpets-gut-certified-low-voc-emissions-30-3720587.jpg');
+
+*/
+}
+.picpic {
+
+	width:50;
+	height:350;
+
+
+}
+.top_bar{
+	width:450px;
+	height:550px;
+	top:0;
+}
+#title_b{
+
+	color:white;
+	background-color:black;
+	width:100%;
+	height:50px;
+	text-align:center; 
+	line-height:50px;
+}
+
+#title_background{
+
+	overflow:hidden;
+	width:100%;
+
+}
+
+#title_m{
+
+	color:white;
+	background-color:black;
+	width:100%;
+	height:100px;
+	text-align:center; 
+	line-height:120px;
+}
+
+.picpicdiv {
+	width:100%;
+	top:0;
+	border:solid 0px;
+	border-right:0px;
+	border-color:white;
+	height:250;
+	background-color:red;
+	overflow:hidden;
+}
+
+
+.picpicdiv2 {
+	width:100%;
+	top:0;
+	border:solid 0px;
+	border-right:0px;
+	border-color:white;
+	height:250;
+	overflow:hidden;
+}
+.main_body_container {
+    min-width: 0px; /* your desired width */
+    max-width: 100%;
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.theHeader {
+	overflow:hidden;
+	z-index:1000;
+	position:fixed;
+	top:0;
+	left:0;
+}
+.archiveElement{
+	width:100%;
+	vertical-align:top;
+	background-color:black;
+	padding:10px;
+	left:0;
+}
+
+#archives{
+	background: #1e5799; /* Old browsers */
+background: -moz-linear-gradient(top, #1e5799 0%, #7db9e8 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(100%,#7db9e8)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #1e5799 0%,#7db9e8 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #1e5799 0%,#7db9e8 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #1e5799 0%,#7db9e8 100%); /* IE10+ */
+background: linear-gradient(to bottom, #1e5799 0%,#7db9e8 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 ); /* IE6-9 */
+}
+#loadingDiv {
+	display:none;
+	position:fixed;
+	top: 50%;
+	left: 50%;
+	width:40px;
+	height:40px;
+	margin-top: -20px; /*set to a negative number 1/2 of your height*/
+	margin-left: -20px; /*set to a negative number 1/2 of your width*/
+}
+.button {
+	-moz-border-radius: 100%;
+	border-radius: 100%;
+	position:absolute;
+	z-index:1001;
+
+}
+.dialog {
+	padding:5px;
+	background-color:#99ffdd;
+	border:1px solid;
+	border-color:black;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	position:absolute;
+	width:400px;
+	font-family:"chunk5";
+	font-size:18px;
+	display:none;
+	z-index:1003;
+	line-height:19px;
+	font-size:19px;
+}
+.text {
+	padding-left:80px;
+	font-size:40px;
+}
+#about {
+	height:400px;
+}
+#bitcoin {
+	height:100px;
+	vertical-align:middle;
+	line-height:40px;
+}
+.titlepic {
+	height:450;
+	top:100; width:450; background-color:red;
+	overflow:hidden;
+
+}
+.arrow-right {
+	width: 0; 
+	height: 0; 
+	border-top: 60px solid transparent;
+	border-bottom: 60px solid transparent;
+	
+	border-left: 60px solid black;
+}
+
+.arrow-left {
+	width: 0; 
+	height: 0; 
+	border-top: 60px solid transparent;
+	border-bottom: 60px solid transparent; 
+	
+	border-right:60px solid black; 
+}
+
+h1
+{
+  font-family: 'chunk5', Arial, sans-serif
+}
