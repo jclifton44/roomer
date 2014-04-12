@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="#ffff6666" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@id/imageView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/planets" android:layout_above="@id/textView1" android:layout_alignParentTop="true" />
+    <TextView android:textAppearance="?android:textAppearanceLarge" android:textSize="30.0sp" android:textColor="#ffeeeeee" android:gravity="center" android:id="@id/textView2" android:background="#ff22aa22" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="LOG IN" android:layout_alignParentLeft="true" android:layout_centerVertical="true" />
+    <TextView android:textAppearance="?android:textAppearanceLarge" android:textSize="30.0sp" android:textColor="#ffeeeeee" android:gravity="center" android:id="@id/textView1" android:background="#ff5555ff" android:layout_width="fill_parent" android:layout_height="60.0dip" android:text="SIGN UP" android:layout_below="@id/textView2" android:layout_alignParentLeft="true" />
+</RelativeLayout>
