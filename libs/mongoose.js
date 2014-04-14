@@ -1,7 +1,9 @@
 var mongoose    = require('mongoose');
 var log         = require('./log')(module);
 var config      = require('./config');
+//var mongoose    = require('./libs/mongoose.js').mongoose;
 
+var crypto = require('crypto');
 //mongoose.connect(config.get('mongoose:uri'));
 
 mongoose.connect('localhost','quax');
@@ -38,34 +40,138 @@ var Marker = new Schema({
         ref: 'User'
     }]
 });
+
+
+// User
 var User = new Schema({
-    email: { type: String, required: true },
-    handle: { type: String, required: true },
-    sha1pass: { type: String, required: true },
+    username: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    handle: { 
+        type: String, 
+        required: true 
+    },
+    hashedPassword: {
+        type: String,
+        required: true
+    },
+    salt: {
+        type: String,
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    },
     face: [{
-        type: ObjectId,
+        type:ObjectId,
         ref: 'Images'
     }],
     geo: {type: [Number], index: '2d'},
-    tags : {type: [String], index: true},
-    modified: { type: Date, default: Date.now },
-    created: { type: Date, default: Date.now }
- });
+});
+
+
+var Client = new Schema({
+    name: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    clientId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    clientSecret: {
+        type: String,
+        required: true
+    }
+});
+var AccessToken = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    clientId: {
+        type: String,
+        required: true
+    },
+    token: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+var RefreshToken = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    clientId: {
+        type: String,
+        required: true
+    },
+    token: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+User.methods.encryptPassword = function(password) {
+    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+    //more secure – return crypto.pbkdf2Sync(password, this.salt, 10000, 512);
+};
+
+User.virtual('userId')
+    .get(function () {
+        return this.id;
+    });
+
+User.virtual('password')
+    .set(function(password) {
+        this._plainPassword = password;
+        this.salt = crypto.randomBytes(32).toString('base64');
+        //more secure - this.salt = crypto.randomBytes(128).toString('base64');
+        this.hashedPassword = this.encryptPassword(password);
+    })
+    .get(function() { return this._plainPassword; });
+
+
+User.methods.checkPassword = function(password) {
+    return this.encryptPassword(password) === this.hashedPassword;
+};
+
 
 // validation
 Marker.path('text').validate(function (v) {
     return v.length > 2 && v.length < 800;
 });
-User.path('email').validate(function (v) {
+User.path('username').validate(function (v) {
     return v.length > 2 && v.length < 140;
 });
-User.path('handle').validate(function (v) {
-    return v.length > 2 && v.length < 140;
-});
+//User.path('handle').validate(function (v) {
+ //   return v.length > 2 && v.length < 140;
+//});
 
 var MarkerModel = mongoose.model('Marker', Marker);
-
+var RefreshTokenModel = mongoose.model('RefreshToken', RefreshToken);
 var UserModel = mongoose.model('User', User);
-
+var ClientModel = mongoose.model('Client', Client);
+var AccessTokenModel = mongoose.model('AccessToken', AccessToken);
 module.exports.MarkerModel = MarkerModel;
-module.exports.User = User;
+module.exports.UserModel = UserModel;
+module.exports.ClientModel = ClientModel;
+module.exports.AccessTokenModel = AccessTokenModel;
+module.exports.RefreshTokenModel = RefreshTokenModel;

@@ -7,24 +7,30 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
-  , http = require('http')
+  , https = require('https')
+  , ht = require('http')
   , path = require('path')
   , log = require('./libs/log')(module)
   , fs = require('fs')
-  , config = require('./libs/config')
-  , mongoose = require('./libs/mongoose.js').mongoose;
+  , config = require('./libs/config.js')
+  //, mongoose = require('./libs/mongoose.js').mongoose
+  , oauth2 = require('./libs/oauth2.js')
+  , auth = require('./libs/auth.js')
+  , passport = require('passport');
 
+
+require('./libs/auth');
 
 var opts = {
    
   // Specify the key file for the server
-  key: fs.readFileSync('ssl/server/keys/roomer-key.pem'),
+  key: fs.readFileSync('./ssl/server/keys/roomer-key.pem'),
    
   // Specify the certificate file
-  cert: fs.readFileSync('ssl/server/keys/roomer-csr.pem'),
+  ca: fs.readFileSync('./ssl/server/keys/roomer-csr.pem'),
    
   // Specify the Certificate Authority certificate
-  ca: fs.readFileSync('ssl/server/keys/roomer-cert.pem'),
+  cert: fs.readFileSync('./ssl/server/keys/roomer-cert.pem'),
    
   // This is where the magic happens in Node.  All previous
   // steps simply setup SSL (except the CA).  By requesting
@@ -43,7 +49,7 @@ var app = express();
 var Mongoose = require('mongoose');
 
 // all environments
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -54,6 +60,7 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
+app.use(passport.initialize());
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
@@ -93,15 +100,27 @@ app.get('/db/mark', function(req, res) {
     });
 });
 
+
+app.post('/oauth/token', oauth2.token);
+app.get('/api/userInfo',
+    passport.authenticate('bearer', { session: false }),
+        function(req, res) {
+            // req.authInfo is set using the `info` argument supplied by
+            // `BearerStrategy`.  It is typically used to indicate scope of the token,
+            // and used in access control checks.  For illustrative purposes, this
+            // example simply returns the scope in the response.
+            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
+        }
+);
 app.post('/db/mark', function(req, res) {
     var mark
  = new MarkerModel({
         title: req.body.title,
         author: req.body.author,
         text: req.body.text,
-        // images: [req.body.images],
-        // geo: [{latitude: req.body.latitude, longitude: req.body.longitude}],
-        // markedby: [req.body.markedby],
+        images: [req.body.images],
+        geo: [{latitude: req.body.latitude, longitude: req.body.longitude}],
+        markedby: [req.body.markedby],
 
     });
 
@@ -185,10 +204,16 @@ app.use(function(request, response, next) {
 
 // 404'd!
 app.use(function(request, response) {
-  response.writeHead(404, { "Content-Type": "tapplication/json" });
+  response.writeHead(404, { "Content-Type": "application/json" });
   response.end("404 error!\n");
 });
 
 
 
-http.createServer(app).listen(app.get('port'));
+//https.createServer(opts, app).listen(app.get('port'));
+//http.createServer(app).listen(80);
+
+https.createServer(opts, function (req, res) {
+  res.writeHead(200);
+  res.end("hello world\n");
+}).listen(80);

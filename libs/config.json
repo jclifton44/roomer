@@ -1,4 +1,7 @@
 {
+    "security": {
+        "tokenLife" : 3600
+    },
     "port" : 80,
     "mongoose": {
         "uri": "localhost"
