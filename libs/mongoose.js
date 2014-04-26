@@ -1,12 +1,13 @@
 var mongoose    = require('mongoose');
 var log         = require('./log')(module);
-var config      = require('./config');
 //var mongoose    = require('./libs/mongoose.js').mongoose;
 
 var crypto = require('crypto');
-//mongoose.connect(config.get('mongoose:uri'));
+var config    = require('./config').configuration;
 
-mongoose.connect('localhost','quax');
+mongoose.connect(config.get('mongoose:uri'), 'quax');
+
+//mongoose.connect('localhost','quax');
 var db = mongoose.connection;
 
 db.on('error', function (err) {
