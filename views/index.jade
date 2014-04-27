@@ -1,5 +1,36 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+
+  body
+
+    .navbar.navbar-default.navbar-fixed-top#the-navbar(role='navigation')
+      .container
+        .navbar-header
+          a(class='navbar-brand', href='#') Roomer
+        .collapse.navbar-collapse
+          ul(class='nav navbar-nav')
+            li
+              a(href='#') Wow
+            li
+              a(href='#') Such Navbar
+            li
+              a(href='#') Many Options
+
+    .jumbotron#the-jumbo
+      .container
+        img(src='/img/planets.png', id='planets-image', class='img-responsive', alt='Responsive image')
+        h1(id='roomer-text-large')  Roomer
+        //p(id='roomer-info-main')  The chatroom that follows you
+        p(id='roomer-info-main')  A chatroom for all of us
+        p(id='roomer-info-main-2')  Wherever, whenever
+
+    .container
+
+      .row.featurette#row-1
+        .col-md-7
+          h2(class='featurette-heading') Roomer is a location based messaging service
+            span.text-muted  Something else
+          p(class='lead') What in the world? Seriously? That's pretty cool
+
+    script(src='/js/index.js')
