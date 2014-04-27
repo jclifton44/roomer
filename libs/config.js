@@ -5,4 +5,4 @@ nconf.argv()
     .file({ file: './config.json' });
 
     
-module.exports = nconf;
+module.exports.configuration = nconf;

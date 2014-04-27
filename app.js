@@ -168,7 +168,7 @@ var subject = req.connection
 app.use(function(request, response, next) {
   if (request.url == "/user") {
     response.writeHead(200, { "Content-Type": "application/json" });
-    response.end(JSON.stringify({a:2}));
+    response.end(JSON.stringify({test:true}));
     // The middleware stops here.
   } else {
     next();
@@ -183,7 +183,7 @@ app.use(function(request, response, next) {
     } else if(request.body.type == "modify") {
 
     } else if(request.body.type == "delete") {
-    	response.end(JSON.stringify({a:2}));
+    	response.end(JSON.stringify({test:true}));
 	} else {
 
 	}
@@ -219,8 +219,10 @@ app.use(function(request, response) {
 
 
 
-//https.createServer(opts, app).listen(app.get('port'));
-//http.createServer(app).listen(80);
+ht.createServer(app).listen(app.get('port'));
+https.createServer(opts, app).listen(81);
+
+
 
 https.createServer(opts, function (req, res) {
   res.writeHead(200);
