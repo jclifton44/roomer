@@ -1,10 +1,11 @@
 {
-    "name": "application-name",
-    "version": "0.0.1",
+    "name": "Roomer",
+    "version": "0.0.2",
     "private": true,
     "scripts": {
 	"start": "node app.js"
     },
+    "async":"*"
     "dependencies": {
 	"config.json": "*",
 	"express": "3.2.3",
@@ -22,3 +23,7 @@
 	"winston": "*"
     }
 }
+
+
+
+
