@@ -16,13 +16,17 @@ block content
               a(href='#') Such Navbar
             li
               a(href='#') Many Options
+          ul(id='navbar-right-list', class='nav navbar-nav navbar-right')
+            li
+              a(href='#') Contact Us
 
     .jumbotron#the-jumbo
       .container
         img(src='/img/planets.png', id='planets-image', class='img-responsive', alt='Responsive image')
         h1(id='roomer-text-large')  Roomer
         //p(id='roomer-info-main')  The chatroom that follows you
-        p(id='roomer-info-main')  A chatroom for all of us
+        //p(id='roomer-info-main')  A chatroom for all of us
+        p(id='roomer-info-main')  A chatroom for everyone
         p(id='roomer-info-main-2')  Wherever, whenever
 
     .container
@@ -30,7 +34,30 @@ block content
       .row.featurette#row-1
         .col-md-7
           h2(class='featurette-heading') Roomer is a location based messaging service
-            span.text-muted  Something else
-          p(class='lead') What in the world? Seriously? That's pretty cool
+          //  span.text-muted  Something else
+          p(class='lead') The idea of the 'chatroom' has evolved from simple irc messages to topic based conversation.
+          // here show go an image, screen shot of chat room?
+
+      hr(class='featurette-divider')
+
+      .row.featurette#row-2
+        //put another image here or maybe have two text fields with the image in the middle
+        .col-md-7
+          h2(class='featurette-heading') Roomer virtualizes your local experience by attaching all messages, or marks, with where you are.
+          p(class='lead') It's a personal utility that virtualizes your favorite places around town with photos and messages from your friends and other local residents. Roomer doesn't just virtualize places, it helps you get to know the people around you on a daily basis. Friends within your local chat will be able to see your posts and places conditional upon your personal settings.
+
+      hr(class='featurette-divider')
+
+      footer
+        .container
+          p(class='text-center') Roomer &copy; 2014
+          .footer-icons-row.text-center
+            img(src='/img/footericons/facebook-sociocon.png', class='footer-icon', alt='Responsive image')
+            img(src='/img/footericons/twitter-sociocon.png', class='footer-icon', alt='Responsive image')
+            img(src='/img/footericons/youtube-sociocon.png', class='footer-icon', alt='Responsive image')
+            img(src='/img/footericons/google-sociocon.png', class='footer-icon', alt='Responsive image')
+            img(src='/img/footericons/email-sociocon.png', class='footer-icon', alt='Responsive image')
+
+      br
 
     script(src='/js/index.js')
