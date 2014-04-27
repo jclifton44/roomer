@@ -1,0 +1,13 @@
+{
+    "name": "Roomer-Site",
+    "description": "Site for Roomer",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "3.x",
+        "jade": "*",
+        "async": "*"
+    }
+}
+
+

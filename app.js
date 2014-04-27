@@ -22,22 +22,22 @@ var express = require('express')
 require('./libs/auth');
 
 var opts = {
-   
+
   // Specify the key file for the server
   key: fs.readFileSync('./ssl/server/keys/roomer-key.pem'),
-   
+
   // Specify the certificate file
   ca: fs.readFileSync('./ssl/server/keys/roomer-csr.pem'),
-   
+
   // Specify the Certificate Authority certificate
   cert: fs.readFileSync('./ssl/server/keys/roomer-cert.pem'),
-   
+
   // This is where the magic happens in Node.  All previous
   // steps simply setup SSL (except the CA).  By requesting
   // the client provide a certificate, we are essentially
   // authenticating the user.
   requestCert: true,
-   
+
   // If specified as "true", no unauthenticated traffic
   // will make it to the route specified.
   rejectUnauthorized: false
@@ -49,7 +49,7 @@ var app = express();
 var Mongoose = require('mongoose');
 
 // all environments
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -88,7 +88,10 @@ app.get('/ErrorExample', function(req, res, next){
 
 
 app.get('/', routes.index);
+
+
 app.get('/db/mark', function(req, res) {
+    console.log('*** matched /db/mark');
     return mark.find(function (err, mark) {
         if (!err) {
             return res.send(mark);
@@ -112,6 +115,8 @@ app.get('/api/userInfo',
             res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
         }
 );
+
+
 app.post('/db/mark', function(req, res) {
     var mark
  = new MarkerModel({
@@ -142,10 +147,14 @@ app.post('/db/mark', function(req, res) {
     });
 });
 
+
 app.use(function(request, response, next) {
 var subject = req.connection
       .getPeerCertificate().subject;
   		if (request.url == "/") {
+
+        console.log('*** matched / in app.use');
+
   			response.type('json');
    			response.writeHead(200, { "Content-Type": "application/json" });
     		response.end(JSON.stringify({a: request.body.p1}));
@@ -216,4 +225,4 @@ app.use(function(request, response) {
 https.createServer(opts, function (req, res) {
   res.writeHead(200);
   res.end("hello world\n");
-}).listen(80);
+}).listen(8080);

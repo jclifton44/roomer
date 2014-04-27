@@ -1,14 +1,24 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
-  "private": true,
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "express": "3.2.3",
-    "jade": "*",
-    "mongodb" : ">=0.9.6-7",
-    "mongoose" : ">=3.6"
-  }
+    "name": "application-name",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+	"start": "node app.js"
+    },
+    "dependencies": {
+	"config.json": "*",
+	"express": "3.2.3",
+	"Faker": "*",
+	"jade": "*",
+	"mongodb": ">=0.9.6-7",
+	"mongoose": ">=3.6",
+	"nconf": "*",
+	"node-oauth2-server": "*",
+	"oauth2orize": "*",
+	"passport": "*",
+	"passport-http": "*",
+	"passport-http-bearer": "*",
+	"passport-oauth2-client-password": "*",
+	"winston": "*"
+    }
 }
