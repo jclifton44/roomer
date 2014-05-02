@@ -13,13 +13,22 @@ var express = require('express')
   , log = require('./libs/log')(module)
   , fs = require('fs')
   , config = require('./libs/config.js')
-  //, mongoose = require('./libs/mongoose.js').mongoose
+  , mongoose = require('./libs/mongoose.js').mongoose
   , oauth2 = require('./libs/oauth2.js')
   , auth = require('./libs/auth.js')
-  , passport = require('passport');
+  , index = require('./routes/action/index')
+  , passport = require('passport')
+  , app_site = express();
 
 
 require('./libs/auth');
+
+app_site.use(express.logger('dev'));
+app_site.use(express.bodyParser());
+app_site.engine('.html', require('jade').__express);
+app_site.use(express.static(__dirname + '/public'));
+app_site.use(app_site.router);
+app_site.get(/\/(\?next=true)?/, routes.index);
 
 var opts = {
 
@@ -49,7 +58,7 @@ var app = express();
 var Mongoose = require('mongoose');
 
 // all environments
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -219,12 +228,6 @@ app.use(function(request, response) {
 
 
 
-ht.createServer(app).listen(app.get('port'));
+ht.createServer(app_site).listen(app.get('port'));
 https.createServer(opts, app).listen(81);
 
-
-
-https.createServer(opts, function (req, res) {
-  res.writeHead(200);
-  res.end("hello world\n");
-}).listen(8080);

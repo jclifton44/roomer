@@ -3,6 +3,10 @@
   margin-bottom: 0;
 }
 
+#navbar-right-list {
+  margin-right:10px;
+}
+
 #roomer-text-large {
   top:10%;
   left:8.1%;
@@ -29,4 +33,13 @@
   left:47.35%;
   max-width:700px;
   position:absolute;
+}
+
+.row.featurette {
+  height:500px;
+}
+
+.footer-icon {
+  width:40px;
+  height: auto;
 }
