@@ -3,10 +3,12 @@
  * GET home page.
  */
 
-exports.action = function(req, res){
-  res.render('action', /*
-  	{ extra info }*/
-  	{ title: req.body.post1 }
-  	);
-
+exports.index = function(req, res){
+  if(req.url == '/') {
+    jade.renderFile('./views/index.jade', {}, function (err, html) {
+      if (err) { console.error('error', err.stack); return;}
+      console.log('*** about to send html: ' + html);
+      res.end(html);
+    });
+  }
 };

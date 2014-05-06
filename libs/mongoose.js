@@ -5,9 +5,9 @@ var log         = require('./log')(module);
 var crypto = require('crypto');
 var config    = require('./config').configuration;
 
-mongoose.connect(config.get('mongoose:uri'), 'quax');
+//mongoose.connect(config.get('mongoose:uri'), 'quax');
 
-//mongoose.connect('localhost','quax');
+mongoose.connect('localhost','quax');
 var db = mongoose.connection;
 
 db.on('error', function (err) {
