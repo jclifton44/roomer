@@ -1,0 +1,45 @@
+
+.navbar {
+  margin-bottom: 0;
+}
+
+#navbar-right-list {
+  margin-right:10px;
+}
+
+#roomer-text-large {
+  top:10%;
+  left:8.1%;
+  position:absolute;
+  font-size:240px;
+}
+
+#roomer-info-main {
+  top:50%;
+  left:8.1%;
+  position:absolute;
+  font-size:60px;
+}
+
+#roomer-info-main-2 {
+  top:60%;
+  left:8.1%;
+  position:absolute;
+  font-size:60px;
+}
+
+#planets-image {
+  top:30%;
+  left:47.35%;
+  max-width:700px;
+  position:absolute;
+}
+
+.row.featurette {
+  height:500px;
+}
+
+.footer-icon {
+  width:40px;
+  height: auto;
+}
