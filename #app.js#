@@ -90,7 +90,7 @@ app.use(function(err, req, res, next){
     return;
 });
 /* example */
-app.get('/ErrorExample', function(req, res, next){
+app.get('ErrorExample', function(req, res, next){
     next(new Error('Random error!'));
 });
 /* example end */
