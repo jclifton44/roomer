@@ -1,6 +1,6 @@
 
 /*
- * GET home page.
+ * only servers web stuff
  */
 var jade = require('jade');
 exports.index = function(req, res){
@@ -11,9 +11,10 @@ exports.index = function(req, res){
     });
   }
   else if(req.url == '/db/mark') {
-    console.log('*** matched in /db/mark');
+    console.log('*** matched /db/mark in routes/index.index');
+    console.log('*** did you meant to use https://?');
   }
   else {
     console.log('*** unmatched url in routes/index.index: ' + req.url);
   }
-};
+}
