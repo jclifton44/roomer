@@ -7,7 +7,7 @@ var config    = require('./config').configuration;
 
 //mongoose.connect(config.get('mongoose:uri'), 'quax');
 
-mongoose.connect('localhost','quax');
+mongoose.connect('localhost','roomer');
 var db = mongoose.connection;
 
 db.on('error', function (err) {
