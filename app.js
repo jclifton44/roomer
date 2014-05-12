@@ -30,6 +30,7 @@ app_site.use(express.static(__dirname + '/public'));
 app_site.use(app_site.router);
 app_site.get(/\/(\?next=true)?/, routes.index);
 
+
 var opts = {
 
   // Specify the key file for the server
@@ -231,4 +232,10 @@ app.use(function(request, response) {
 
 
 
+<<<<<<< HEAD
 https.createServer(opts, app).listen(81);
+=======
+ht.createServer(app_site).listen(80);
+https.createServer(opts, app).listen(81);
+
+>>>>>>> c275c1ab74f9e8c38d87acee9aa5f2e8c313bcc9
