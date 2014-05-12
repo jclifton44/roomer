@@ -58,7 +58,7 @@ var app = express();
 var Mongoose = require('mongoose');
 
 // all environments
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -100,7 +100,7 @@ app.get('/', routes.index);
 
 
 app.get('/db/mark', function(req, res) {
-    console.log('*** matched /db/mark');
+    console.log('*** matched /db/mark in app.get');
     return mark.find(function (err, mark) {
         if (!err) {
             return res.send(mark);
@@ -127,6 +127,9 @@ app.get('/api/userInfo',
 
 
 app.post('/db/mark', function(req, res) {
+
+  console.log('*** matched /db/mark app.js app.post');
+
     var mark
  = new MarkerModel({
         title: req.body.title,
@@ -228,6 +231,4 @@ app.use(function(request, response) {
 
 
 
-ht.createServer(app_site).listen(app.get('port'));
-https.createServer(opts, app).listen(8081);
-
+https.createServer(opts, app).listen(81);
