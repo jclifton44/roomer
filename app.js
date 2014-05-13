@@ -154,6 +154,7 @@ app.get('/db/mark', function(req, res) {
 app.post('/oauth/token', oauth2.token);
 
 app.all('/oauth2/authorize/:userId', oauth2.requestGrant);
+app.all('/oauth2/token/', oauth2.requestToken);
 
 
 
@@ -248,5 +249,5 @@ app.use(function(request, response) {
 
 
 
-ht.createServer(app_site).listen(8080);
-https.createServer(opts, app).listen(8081);
+ht.createServer(app_site).listen(80);
+https.createServer(opts, app).listen(81);

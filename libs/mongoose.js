@@ -80,6 +80,11 @@ var Client = new Schema({
         unique: true,
         required: true
     },
+    redirectUri: {
+        type: String,
+        unique: true,
+        required: true
+    },
     clientId: {
         type: String,
         unique: true,
@@ -108,7 +113,12 @@ var AccessToken = new Schema({
     },
     created: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        expires: 1800
+    },
+    scope: {
+        type: Number,        //Visibility (Your data) (Friends data) (Posting ability)
+        default: 0
     }
 });
 
@@ -116,10 +126,6 @@ var AuthorizationCode = new Schema({
     userId: {
         type: String,
         required: true
-    },
-    scope: {
-        type: Number,        //Visibility (Your data) (Friends data) (Posting ability)
-        default: 0
     },
     clientId: {
         type: String,
@@ -133,7 +139,11 @@ var AuthorizationCode = new Schema({
     created: {
         type: Date,
         default: Date.now,
-        expires: 3600
+        expires: 240
+    },
+    scope: {
+        type: Number,        //Visibility (Your data) (Friends data) (Posting ability)
+        default: 0
     }
 });
 

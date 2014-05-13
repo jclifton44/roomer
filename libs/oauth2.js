@@ -84,7 +84,27 @@ exports.token = [
     server.errorHandler()
 ]
 
-
+exports.requestToken = function(req, res) {
+    var code = req.body.code;
+    var grantType = req.body.grant_type;
+    if( grantType == 'authorization_code' ) {
+        AuthorizationCodeModel.findOne ({ token: code }, function(err, authorizationCode) {
+            if(err) {
+                res.end();
+            }
+            if(!authorizationCode){
+                res.end();
+            }
+            var accessToken = crypto.randomBytes(32).toString('base64');
+            console.log(accessToken);
+            var AccessToken = new AccessTokenModel({ userId: authorizationCode.userId, clientId: authorizationCode.userId, token: accessToken, scope:authorizationCode.scope});
+            AccessToken.save(function (err) {
+            if (err) { console.log(err);}
+            else {console.log("New token made - %s",Date.now); }
+            });
+        });
+    }
+}
 
 exports.requestGrant = function(req, res) {
     if( req.query.response_type == 'code' ) {
@@ -106,7 +126,8 @@ exports.requestGrant = function(req, res) {
             if (err) { console.log(err);}
             else {console.log("New authCode - %s",Date.now); }
         });
-
+        res.send({code:AuthValue, state:'0'});
+        res.end();
         console.log(req.params.userId);
     } else if( req.query.response_type == 'token' ) {
         console.log(req.query.responsetype);
