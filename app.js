@@ -3,10 +3,9 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express')
   , routes = require('./routes')
-  , user = require('./routes/user')
+  , otis = require('./routes/otisAPI.js')
   , https = require('https')
   , ht = require('http')
   , path = require('path')
@@ -17,12 +16,15 @@ var express = require('express')
   , oauth2 = require('./libs/oauth2.js')
   , oauthserver = require('node-oauth2-server')
   , auth = require('./libs/auth.js')
-  , index = require('./routes/action/index')
   , passport = require('passport')
   , app_site = express();
 
 
 require('./libs/auth');
+
+/*
+  app_site is for website
+*/
 
 app_site.use(express.logger('dev'));
 app_site.use(express.bodyParser());
@@ -31,6 +33,9 @@ app_site.use(express.static(__dirname + '/public'));
 app_site.use(app_site.router);
 app_site.get('/', routes.index);
 
+/*
+  ssl enabalization
+*/
 
 var opts = {
 
@@ -55,12 +60,16 @@ var opts = {
 };
 
 
+/*
+  everything down, is for roomer app, not website
+*/
+
 var app = express();
 
 var Mongoose = require('mongoose');
 
 // all environments
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 8080);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
@@ -72,6 +81,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 app.use(passport.initialize());
+
+
+
 // development only
 
 //app.oauth = oauthserver({
@@ -91,6 +103,8 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
+
 var MarkerModel    = require('./libs/mongoose').MarkerModel;
 app.use(function(req, res, next){
     res.status(404);
@@ -99,12 +113,17 @@ app.use(function(req, res, next){
     return;
 });
 
+
+
 app.use(function(err, req, res, next){
     res.status(err.status || 500);
     log.error('Internal error(%d): %s',res.statusCode,err.message);
     res.send({ error: err.message });
     return;
 });
+
+
+
 /* example */
 app.get('/ErrorExample', function(req, res, next){
     next(new Error('Random error!'));
@@ -112,11 +131,13 @@ app.get('/ErrorExample', function(req, res, next){
 /* example end */
 
 
+
 app.get('/', routes.index);
 
 
+
 app.get('/db/mark', function(req, res) {
-    console.log('*** matched /db/mark');
+    console.log('*** matched /db/mark in app.get');
     return mark.find(function (err, mark) {
         if (!err) {
             return res.send(mark);
@@ -129,39 +150,18 @@ app.get('/db/mark', function(req, res) {
 });
 
 
+
 app.post('/oauth/token', oauth2.token);
+
 app.all('/oauth2/authorize/:userId', oauth2.requestGrant);
 
 
-app.post('/db/mark', function(req, res) {
-    var mark
- = new MarkerModel({
-        title: req.body.title,
-        author: req.body.author,
-        text: req.body.text,
-        images: [req.body.images],
-        geo: [{latitude: req.body.latitude, longitude: req.body.longitude}],
-        markedby: [req.body.markedby],
 
-    });
 
-    mark.save(function (err) {
-        if (!err) {
-            log.info("marker created");
-            return res.send({ status: 'OK', mark:mark });
-        } else {
-            console.log(err);
-            if(err.name == 'ValidationError'){
-                res.statusCode = 400;
-                res.send({ error: 'Validation error' });
-            } else {
-                res.statusCode = 500;
-                res.send({ error: 'Server error' });
-            }
-            log.error('Internal error(%d): %s',res.statusCode,err.message);
-        }
-    });
-});
+app_site.get(/\/(\?next=true)?/, routes.index);
+
+app.post('/db/mark', otis.createMark);
+
 
 
 app.use(function(request, response, next) {
@@ -180,6 +180,8 @@ var subject = req.connection
   		}
 });
 
+
+
 // About page
 app.use(function(request, response, next) {
   if (request.url == "/user") {
@@ -190,6 +192,9 @@ app.use(function(request, response, next) {
     next();
   }
 });
+
+
+
 app.use(function(request, response, next) {
   if (request.url == "/post") {
 
@@ -208,6 +213,9 @@ app.use(function(request, response, next) {
     next();
   }
 });
+
+
+
 app.use(function(request, response, next) {
   if (request.url == "/auth") {
     response.writeHead(200, { "Content-Type": "application/json" });
@@ -217,6 +225,9 @@ app.use(function(request, response, next) {
     next();
   }
 });
+
+
+
 app.use(function(request, response, next) {
   if (request.url == "/roomer") {
     response.writeHead(200, { "Content-Type": "application/json" });
@@ -227,6 +238,8 @@ app.use(function(request, response, next) {
   }
 });
 
+
+
 // 404'd!
 app.use(function(request, response) {
   response.writeHead(404, { "Content-Type": "application/json" });
@@ -235,6 +248,5 @@ app.use(function(request, response) {
 
 
 
-ht.createServer(app_site).listen(80);
-https.createServer(opts, app).listen(81);
-
+ht.createServer(app_site).listen(8080);
+https.createServer(opts, app).listen(8081);
