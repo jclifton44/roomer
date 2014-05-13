@@ -15,6 +15,7 @@ var express = require('express')
   , config = require('./libs/config.js')
   , mongoose = require('./libs/mongoose.js').mongoose
   , oauth2 = require('./libs/oauth2.js')
+  , oauthserver = require('node-oauth2-server')
   , auth = require('./libs/auth.js')
   , index = require('./routes/action/index')
   , passport = require('passport')
@@ -28,7 +29,7 @@ app_site.use(express.bodyParser());
 app_site.engine('.html', require('jade').__express);
 app_site.use(express.static(__dirname + '/public'));
 app_site.use(app_site.router);
-app_site.get(/\/(\?next=true)?/, routes.index);
+app_site.get('/', routes.index);
 
 
 var opts = {
@@ -72,6 +73,20 @@ app.use(express.json());       // to support JSON-encoded bodies
 app.use(express.urlencoded()); // to support URL-encoded bodies
 app.use(passport.initialize());
 // development only
+
+//app.oauth = oauthserver({
+//  model: models.oauth,
+//  grants: ['password', 'authorization_code', 'refresh_token', 'client-credentials'],
+//  debug: true
+//});
+/*
+ * Grant types: 
+ *    |____ 'password' or 'resource owner credentials'      - used 
+ *    |____ 'authorization_code'                            - used by ThirdParty APIs to use our Info (sustained usage)
+ *    |____ 'refresh_token'                                 - used to regain an access token after expiration
+ *    |____ 'client-credentials'                            - used to authenticate public clients (native apps) 
+ */
+
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
@@ -115,16 +130,7 @@ app.get('/db/mark', function(req, res) {
 
 
 app.post('/oauth/token', oauth2.token);
-app.get('/api/userInfo',
-    passport.authenticate('bearer', { session: false }),
-        function(req, res) {
-            // req.authInfo is set using the `info` argument supplied by
-            // `BearerStrategy`.  It is typically used to indicate scope of the token,
-            // and used in access control checks.  For illustrative purposes, this
-            // example simply returns the scope in the response.
-            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
-        }
-);
+app.all('/oauth2/authorize/:userId', oauth2.requestGrant);
 
 
 app.post('/db/mark', function(req, res) {

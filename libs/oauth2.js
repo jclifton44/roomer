@@ -6,13 +6,16 @@ var UserModel           = require('./mongoose.js').UserModel;
 var ClientModel         = require('./mongoose.js').ClientModel;
 var AccessTokenModel    = require('./mongoose.js').AccessTokenModel;
 var RefreshTokenModel   = require('./mongoose.js').RefreshTokenModel;
+var AuthorizationCodeModel   = require('./mongoose.js').AuthorizationCodeModel;
+
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
 
 // Exchange username & password for access token.
-server.exchange(oauth2orize.exchange.password(function(client, username, password, scope, done) {
+server.exchange(oauth2orize.exchange.code(function(client, username, password, scope, done) {
     UserModel.findOne({ username: username }, function(err, user) {
+        console.log("hey");
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         if (!user.checkPassword(password)) { return done(null, false); }
@@ -42,6 +45,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 // Exchange refreshToken for access token.
 server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken, scope, done) {
     RefreshTokenModel.findOne({ token: refreshToken }, function(err, token) {
+        console.log("aye");
         if (err) { return done(err); }
         if (!token) { return done(null, false); }
         if (!token) { return done(null, false); }
@@ -79,3 +83,37 @@ exports.token = [
     server.token(),
     server.errorHandler()
 ]
+
+
+
+exports.requestGrant = function(req, res) {
+    if( req.query.response_type == 'code' ) {
+        var id = req.query.client_id;
+        var redirect_uri = req.query.redirect_uri;
+        var scope = req.query.scope;
+        var state = req.query.state
+        /*ClientModel.findOne ({ client : id }, function(err, client) {
+            if(err) {}
+            if(!client){
+
+            }
+            
+        });*/
+        var AuthValue = crypto.randomBytes(32).toString('base64');
+        console.log(AuthValue);
+        var AuthorizationCode = new AuthorizationCodeModel({ userId: req.params.userId, scope: req.query.scope, clientId: id, token: AuthValue});
+        AuthorizationCode.save(function (err) {
+            if (err) { console.log(err);}
+            else {console.log("New authCode - %s",Date.now); }
+        });
+
+        console.log(req.params.userId);
+    } else if( req.query.response_type == 'token' ) {
+        console.log(req.query.responsetype);
+    } else if( req.body.grant_type == 'password' ) {
+        console.log(req.body.grant_type);
+    } else if( req.body.grant_type == 'client_credentials' ) {
+        console.log(req.body.grant_type);
+    }
+    res.end();
+}
