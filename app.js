@@ -83,6 +83,10 @@ app.use(passport.initialize());
 
 
 
+/*
+  figure out what this is
+  do we need it?
+*/
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
