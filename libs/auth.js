@@ -7,6 +7,7 @@ var UserModel               = require('./mongoose').UserModel;
 var ClientModel             = require('./mongoose').ClientModel;
 var AccessTokenModel        = require('./mongoose').AccessTokenModel;
 var RefreshTokenModel       = require('./mongoose').RefreshTokenModel;
+var search                  = require('./searchUser.js')
 
 
 passport.use(new ClientPasswordStrategy(
@@ -25,14 +26,15 @@ passport.use(new ClientPasswordStrategy(
 
 passport.use(new BasicStrategy(
     function(username, password, done) {
-        console.log("in basic strategy");
-        UserModel.findOne({ userId: username }, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            if (user.clientSecret != password) { return done(null, false); }
+        console.log('in basic strategy');
+        search.findUser(username);
+      //  UserModel.findOne({ userId: username }, function(err, user) {
+      //       if (err) { return done(err); }
+      //      if (!user) { return done(null, false); }
+      //      if (user.clientSecret != password) { return done(null, false); }
 
-            return done(null, client);
-        });
+      //      return done(null, client);
+        //});
     }
 ));
 

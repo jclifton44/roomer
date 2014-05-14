@@ -7,6 +7,7 @@ var ClientModel         = require('./mongoose.js').ClientModel;
 var AccessTokenModel    = require('./mongoose.js').AccessTokenModel;
 var RefreshTokenModel   = require('./mongoose.js').RefreshTokenModel;
 var AuthorizationCodeModel   = require('./mongoose.js').AuthorizationCodeModel;
+var search              = require('./searchUser.js')
 
 
 // create OAuth 2.0 server
@@ -84,6 +85,21 @@ exports.token = [
     server.errorHandler()
 ]
 
+
+exports.createClient = function(req, res) {
+    var userId = req.body.userId;
+    var type = req.body.clientType;
+    var clientCreated
+    UserModel.findOne({ username: userId }, function(err, user) {
+        if(err) {res.end();}
+        if(!user){
+
+        }  
+    });
+
+    res.end();
+
+}
 exports.requestToken = function(req, res) {
     var code = req.body.code;
     var grantType = req.body.grant_type;
@@ -100,7 +116,7 @@ exports.requestToken = function(req, res) {
             var AccessToken = new AccessTokenModel({ userId: authorizationCode.userId, clientId: authorizationCode.userId, token: accessToken, scope:authorizationCode.scope});
             AccessToken.save(function (err) {
             if (err) { console.log(err);}
-            else {console.log("New token made - %s",Date.now); }
+            else {console.log("New token - %s",Date.now); }
             });
         });
     }
@@ -133,6 +149,14 @@ exports.requestGrant = function(req, res) {
         console.log(req.query.responsetype);
     } else if( req.body.grant_type == 'password' ) {
         console.log(req.body.grant_type);
+        passport.authenticate('basic', { successRedirect: '/',
+                                   failureRedirect: '/login',
+                                   failureFlash: true }, 
+                                   function(req, res) {
+                                        res.json(req.user);
+                                   });
+        console.log('blah');
+
     } else if( req.body.grant_type == 'client_credentials' ) {
         console.log(req.body.grant_type);
     }

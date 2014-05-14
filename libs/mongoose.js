@@ -52,6 +52,7 @@ var User = new Schema({
     },
     handle: { 
         type: String, 
+        unique: true,
         required: true 
     },
     hashedPassword: {
@@ -66,6 +67,10 @@ var User = new Schema({
         type: Date,
         default: Date.now
     },
+    clientId: [{
+        type:ObjectId,
+        ref: String
+    }],
     face: [{
         type:ObjectId,
         ref: 'Images'

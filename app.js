@@ -13,9 +13,11 @@ var express = require('express')
   , fs = require('fs')
   , config = require('./libs/config.js')
   , mongoose = require('./libs/mongoose.js').mongoose
+  , auth = require('./libs/auth.js')
   , oauth2 = require('./libs/oauth2.js')
   , oauthserver = require('node-oauth2-server')
-  , auth = require('./libs/auth.js')
+  , search = require('./libs/searchUser.js')
+
   , passport = require('passport')
   , app_site = express();
 
@@ -155,6 +157,9 @@ app.post('/oauth/token', oauth2.token);
 
 app.all('/oauth2/authorize/:userId', oauth2.requestGrant);
 app.all('/oauth2/token/', oauth2.requestToken);
+app.all('/oauth2/client/', oauth2.createClient);
+app.post('/find/user/:id', search.findUser);
+
 
 
 
