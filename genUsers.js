@@ -14,7 +14,7 @@ UserModel.remove({}, function(err) {
     });
 
     for(i=0; i<4; i++) {
-        var user = new UserModel({ username: faker.random.first_name().toLowerCase(), password: faker.Lorem.words(1)[0], handle: faker.random.first_name().toLowerCase()});
+        var user = new UserModel({ username: faker.random.first_name().toLowerCase(), password: "anyanton", handle: faker.random.first_name().toLowerCase()});
         user.save(function(err, user) {
             if(err) return log.error(err);
             else log.info("New user - %s:%s",user.username,user.password);

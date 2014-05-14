@@ -52,6 +52,7 @@ var User = new Schema({
     },
     handle: { 
         type: String, 
+        unique: true,
         required: true 
     },
     hashedPassword: {
@@ -66,6 +67,10 @@ var User = new Schema({
         type: Date,
         default: Date.now
     },
+    clientId: [{
+        type:ObjectId,
+        ref: String
+    }],
     face: [{
         type:ObjectId,
         ref: 'Images'
@@ -80,6 +85,11 @@ var Client = new Schema({
         unique: true,
         required: true
     },
+    redirectUri: {
+        type: String,
+        unique: true,
+        required: true
+    },
     clientId: {
         type: String,
         unique: true,
@@ -89,6 +99,8 @@ var Client = new Schema({
         type: String,
         required: true
     }
+
+
 });
 var AccessToken = new Schema({
     userId: {
@@ -106,7 +118,37 @@ var AccessToken = new Schema({
     },
     created: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        expires: 1800
+    },
+    scope: {
+        type: Number,        //Visibility (Your data) (Friends data) (Posting ability)
+        default: 0
+    }
+});
+
+var AuthorizationCode = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    clientId: {
+        type: String,
+        required: true
+    },
+    token: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now,
+        expires: 240
+    },
+    scope: {
+        type: Number,        //Visibility (Your data) (Friends data) (Posting ability)
+        default: 0
     }
 });
 
@@ -171,8 +213,11 @@ var RefreshTokenModel = mongoose.model('RefreshToken', RefreshToken);
 var UserModel = mongoose.model('User', User);
 var ClientModel = mongoose.model('Client', Client);
 var AccessTokenModel = mongoose.model('AccessToken', AccessToken);
+var AuthorizationCodeModel = mongoose.model('AuthorizationCode', AuthorizationCode);
+
 module.exports.MarkerModel = MarkerModel;
 module.exports.UserModel = UserModel;
 module.exports.ClientModel = ClientModel;
 module.exports.AccessTokenModel = AccessTokenModel;
 module.exports.RefreshTokenModel = RefreshTokenModel;
+module.exports.AuthorizationCodeModel = AuthorizationCodeModel;

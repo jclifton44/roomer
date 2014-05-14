@@ -13,8 +13,11 @@ var express = require('express')
   , fs = require('fs')
   , config = require('./libs/config.js')
   , mongoose = require('./libs/mongoose.js').mongoose
-  , oauth2 = require('./libs/oauth2.js')
   , auth = require('./libs/auth.js')
+  , oauth2 = require('./libs/oauth2.js')
+  , oauthserver = require('node-oauth2-server')
+  , search = require('./libs/searchUser.js')
+
   , passport = require('passport')
   , app_site = express();
 
@@ -30,7 +33,7 @@ app_site.use(express.bodyParser());
 app_site.engine('.html', require('jade').__express);
 app_site.use(express.static(__dirname + '/public'));
 app_site.use(app_site.router);
-app_site.get(/\/(\?next=true)?/, routes.index);
+app_site.get('/', routes.index);
 
 /*
   ssl enabalization
@@ -88,6 +91,20 @@ app.use(passport.initialize());
   do we need it?
 */
 // development only
+
+//app.oauth = oauthserver({
+//  model: models.oauth,
+//  grants: ['password', 'authorization_code', 'refresh_token', 'client-credentials'],
+//  debug: true
+//});
+/*
+ * Grant types: 
+ *    |____ 'password' or 'resource owner credentials'      - used 
+ *    |____ 'authorization_code'                            - used by ThirdParty APIs to use our Info (sustained usage)
+ *    |____ 'refresh_token'                                 - used to regain an access token after expiration
+ *    |____ 'client-credentials'                            - used to authenticate public clients (native apps) 
+ */
+
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
@@ -142,18 +159,13 @@ app.get('/db/mark', function(req, res) {
 
 app.post('/oauth/token', oauth2.token);
 
+app.all('/oauth2/authorize/:userId', oauth2.requestGrant);
+app.all('/oauth2/token/', oauth2.requestToken);
+app.all('/oauth2/client/', oauth2.createClient);
+app.post('/find/user/:id', search.findUser);
 
 
-app.get('/api/userInfo',
-    passport.authenticate('bearer', { session: false }),
-        function(req, res) {
-            // req.authInfo is set using the `info` argument supplied by
-            // `BearerStrategy`.  It is typically used to indicate scope of the token,
-            // and used in access control checks.  For illustrative purposes, this
-            // example simply returns the scope in the response.
-            res.json({ user_id: req.user.userId, name: req.user.username, scope: req.authInfo.scope })
-        }
-);
+
 
 
 app_site.get(/\/(\?next=true)?/, routes.index);
@@ -246,5 +258,5 @@ app.use(function(request, response) {
 
 
 
-ht.createServer(app_site).listen(8080);
-https.createServer(opts, app).listen(8081);
+ht.createServer(app_site).listen(80);
+https.createServer(opts, app).listen(81);

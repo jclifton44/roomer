@@ -6,13 +6,17 @@ var UserModel           = require('./mongoose.js').UserModel;
 var ClientModel         = require('./mongoose.js').ClientModel;
 var AccessTokenModel    = require('./mongoose.js').AccessTokenModel;
 var RefreshTokenModel   = require('./mongoose.js').RefreshTokenModel;
+var AuthorizationCodeModel   = require('./mongoose.js').AuthorizationCodeModel;
+var search              = require('./searchUser.js')
+
 
 // create OAuth 2.0 server
 var server = oauth2orize.createServer();
 
 // Exchange username & password for access token.
-server.exchange(oauth2orize.exchange.password(function(client, username, password, scope, done) {
+server.exchange(oauth2orize.exchange.code(function(client, username, password, scope, done) {
     UserModel.findOne({ username: username }, function(err, user) {
+        console.log("hey");
         if (err) { return done(err); }
         if (!user) { return done(null, false); }
         if (!user.checkPassword(password)) { return done(null, false); }
@@ -42,6 +46,7 @@ server.exchange(oauth2orize.exchange.password(function(client, username, passwor
 // Exchange refreshToken for access token.
 server.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken, scope, done) {
     RefreshTokenModel.findOne({ token: refreshToken }, function(err, token) {
+        console.log("aye");
         if (err) { return done(err); }
         if (!token) { return done(null, false); }
         if (!token) { return done(null, false); }
@@ -79,3 +84,81 @@ exports.token = [
     server.token(),
     server.errorHandler()
 ]
+
+
+exports.createClient = function(req, res) {
+    var userId = req.body.userId;
+    var type = req.body.clientType;
+    var clientCreated
+    UserModel.findOne({ username: userId }, function(err, user) {
+        if(err) {res.end();}
+        if(!user){
+
+        }  
+    });
+
+    res.end();
+
+}
+exports.requestToken = function(req, res) {
+    var code = req.body.code;
+    var grantType = req.body.grant_type;
+    if( grantType == 'authorization_code' ) {
+        AuthorizationCodeModel.findOne ({ token: code }, function(err, authorizationCode) {
+            if(err) {
+                res.end();
+            }
+            if(!authorizationCode){
+                res.end();
+            }
+            var accessToken = crypto.randomBytes(32).toString('base64');
+            console.log(accessToken);
+            var AccessToken = new AccessTokenModel({ userId: authorizationCode.userId, clientId: authorizationCode.userId, token: accessToken, scope:authorizationCode.scope});
+            AccessToken.save(function (err) {
+            if (err) { console.log(err);}
+            else {console.log("New token - %s",Date.now); }
+            });
+        });
+    }
+}
+
+exports.requestGrant = function(req, res) {
+    if( req.query.response_type == 'code' ) {
+        var id = req.query.client_id;
+        var redirect_uri = req.query.redirect_uri;
+        var scope = req.query.scope;
+        var state = req.query.state
+        /*ClientModel.findOne ({ client : id }, function(err, client) {
+            if(err) {}
+            if(!client){
+
+            }
+            
+        });*/
+        var AuthValue = crypto.randomBytes(32).toString('base64');
+        console.log(AuthValue);
+        var AuthorizationCode = new AuthorizationCodeModel({ userId: req.params.userId, scope: req.query.scope, clientId: id, token: AuthValue});
+        AuthorizationCode.save(function (err) {
+            if (err) { console.log(err);}
+            else {console.log("New authCode - %s",Date.now); }
+        });
+        res.send({code:AuthValue, state:'0'});
+        res.end();
+        console.log(req.params.userId);
+    } else if( req.query.response_type == 'token' ) {
+        console.log(req.query.responsetype);
+    } else if( req.body.grant_type == 'password' ) {
+        console.log(req.body.grant_type);
+        passport.authenticate('basic', { successRedirect: '/',
+                                   failureRedirect: '/login',
+                                   failureFlash: true }, 
+                                   function(req, res) {
+                                        res.json(req.user);
+                                   });
+        console.log('blah');
+
+    } else if( req.body.grant_type == 'client_credentials' ) {
+        console.log(req.body.grant_type);
+    }
+    res.end();
+}
